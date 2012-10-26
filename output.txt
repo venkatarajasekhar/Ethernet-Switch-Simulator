@@ -1,0 +1,201 @@
+/*
+ * output.txt
+ * Author: Jonatan Schroeder
+ *
+ * This file contains templates for your output functions. You may use
+ * them at your discretion based on your own choice of data
+ * structure. Note that this file does not compile as a regular C
+ * file, and is intended only as a template to guide you in developing
+ * your own output functions. You are not required to use this code if
+ * you wish to use a different methodology. However, your output WILL 
+ * have to match the specifications in the assignment write-up, as 
+ * your assignment will be checked with an automated script.
+ */
+ 
+
+#include <stdio.h>
+
+// Prints a header line which labels the ports followed by the string
+// "FRAME_ID". e.g. If NUM_PORTS = 5, it will print: 
+//  P0 P1 P2 P3 P4 FRAME_ID
+//  Note that PORT_FORMAT is a #define constant defined in switch.h
+void print_p1_frame_header(void) {
+  
+  int p;
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    printf(PORT_FORMAT " ", p);
+  
+  printf("FRAME_ID\n");
+}
+
+
+// For a given input frame, the function prints out a summary of which output port(s) a frame should be sent to
+// for part 1, e.g. if the first frame (with ID 001) is input on port P2 
+// and is meant to be sent to ports P0, P1, P3, and P4, this will print:
+// +  +  ^  +  + 001
+// The function takes as arguments, the frame_id of the given frame and 
+// sufficient information to determine wether the given frame should be 
+// added to each of the possible ports.
+
+void print_p1_frame_result(unsigned int frame_id, ...) {
+   
+  int p;
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    printf(" %c ", (/* port p should be included */) ? '+' : '^');
+  
+  printf(FRAME_ID_FORMAT "\n", frame_id);
+}
+
+// Prints an empty line, followed by a summary line containing 
+// the total number of frames that were sent through a port printed 
+// in the appropriate column. e.g. Based on the example in
+// the writeup, this would produce the line: 
+// 2   4   3   3   2
+void print_p1_frame_totals(unsigned int frame_count[NUM_PORTS]) {
+  
+  int p;
+  
+  printf("\n");
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    printf("%2u ", frame_count[p]);
+  
+  printf("\n\n");
+}
+
+
+
+// Based on the condition that you provide in the if-statement (within the call
+// to printf()), this should output either "+" followed by the frame ID if the 
+// frame is added to the buffer or "<" followed by the frame ID if the frame 
+// is dropped and not added to the buffer.  The function takes as arguments
+// the frame_id of the current input frame and sufficient other arguments to 
+// determine whether that frame should be enqueued or dropped.
+void print_p2_frame_enqueued(unsigned int frame_id, ...) {
+  
+  printf("%c" FRAME_ID_FORMAT "\n", (/* buffer had space */) ? '+' : '<', frame_id);
+}
+
+
+// Output function to dequeue frames in response to a 'TICK'. 
+// If there are not any frames in the buffer, this should output 
+// "e^^^"; else it should output a "-" followed by the frame ID 
+// of the frame that is sent out of the queue, e.g. "-001".
+void print_p2_frame_dequeued(...) {
+
+  if (/* buffer is empty */)
+    printf("e^^^\n");
+  else
+    printf("-" FRAME_ID_FORMAT "\n", frame_id);
+}
+
+// Prints an empty line, followed by a list of frame IDs
+// left in the buffer. Ensure that this prints in FIFO order, 
+// to comply with the assignment specification. 
+// This assumes that frames are dequeued from the 
+// buffer in FIFO order.
+void print_p2_frame_final(...) {
+  
+  int b;
+  
+  printf("\n");
+  
+  for (b = 0; b < BUFFER_SIZE; b++) {
+    if (/* buffer is empty */)
+      printf(" ---\n");
+    else {
+      frame_id = (/* frame_id of dequeued frame */);
+      printf(" " FRAME_ID_FORMAT "\n", frame_id);
+    }
+}
+
+// Prints out the a header containing all of the port names
+// for part 3. e.g. if NUM_PORTS = 5, it will print:
+//   P0   P1   P2   P3   P4 
+void print_p3_frame_header(void) {
+  
+  int p;
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    printf("  " PORT_FORMAT " ", p);
+  
+  printf("\n");
+}
+
+
+// Output function to print out the action that takes place for an incoming frame.
+// If the frame is successfully enqueued in a given port's queue, you are to output
+// a + followed by the frame ID (as in Part 2) in the that port's column. If a frame 
+// was dropped from a given port's queue, you are to output < followed by the frame ID 
+// in that port's column. You are to output "^^^^" in columns where the frame was not 
+// considered to be added to the queue, such as the column for the input port. 
+// Following the example in the assignment spec, this should output something like:
+// +045 ^^^^ +045 +045 <045 
+void print_p3_frame_enqueue(unsigned int frame_id, ...) {
+  
+  int p;
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    if (/* port p should be included */)
+      printf("%c" FRAME_ID_FORMAT " ",
+             (/* buffer[p] has space */) ? '+' : '<', frame_id);
+    else
+      printf("^^^^ ");
+  
+  printf("\n");
+}
+
+
+// Output function to dequeue frames in response to a 'TICK'. 
+// For each non-empty buffer you will output a "-" followed by 
+// the frame ID of the dequeued frame in the columns representing 
+// the ports, or "e^^^" if the queue is empty. For example, this should
+// output something like: -045 e^^^ -048 -046 -045 
+void print_p3_frame_dequeue(...) {
+  
+  int p;
+  
+  for (p = 0; p < NUM_PORTS; p++)
+    if (/* buffer[p] is empty */)
+      printf("e^^^ ");
+    else
+      printf("-" FRAME_ID_FORMAT " ", frame_id);
+  
+  printf("\n");
+}
+
+
+// Prints an empty line, followed by a list of frame IDs
+// left in the buffer. Ensure that this prints in FIFO order, 
+// to comply with the assignment specification. 
+void print_p3_final_buffers(...) {
+  
+  int p, b;
+  
+  printf("\n");
+  
+  for (b = 0; b < BUFFER_SIZE; b++) {
+    
+    for (p = 0; p < NUM_PORTS; p++)
+      if (/* buffer[p] is empty */)
+        printf(" --- ");
+      else
+        printf(" " FRAME_ID_FORMAT " ", /* dequeued frame id */);  
+    printf("\n");
+  }
+  
+  printf("\n");
+}
+
+
+// A template for outputting the state of the switch for part 1 and part 3.
+// Each line of the table should contain an Ethernet MAC address and its 
+// destination port, separated by a single space. The table should be printed 
+// in order of MAC address.
+void print_p1p3_switch_table_entry(unsigned int address, unsigned int port) {
+  
+  printf(ADDRESS_FORMAT " P%u\n", address, port);
+}
+
