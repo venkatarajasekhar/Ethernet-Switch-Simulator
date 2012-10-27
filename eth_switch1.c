@@ -123,7 +123,15 @@ void update_output_ports(switch_state *state, unsigned int port, unsigned int de
 }
 
 void update_switch_table(switch_state *state, unsigned int port, unsigned int source_addr) {
-	
+	unsigned int port_num_in_table = is_dest_addr_in_table(state, source_addr);
+	if(port_num_in_table==NUM_PORTS) {
+		state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	}
+	else if (port_num_in_table==port) return;
+	else {
+		state->p1.table = switch_table_remove(state->p1.table, port_num_in_table, source_addr);
+		state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	}
 }
 
 /* This function is called every time a new frame is received. It
@@ -134,6 +142,8 @@ void forward_frame(switch_state *state, unsigned int port, unsigned int source_a
                    unsigned int dest_addr, unsigned int frame_id) {
 	//state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
 	//update_output_ports(state, port, dest_addr, frame_id);
+	//update_output_ports(state, port, source_addr);
+	update_switch_table(state, port, source_addr);
 	//state->p1.table = switch_table_remove(state->p1.table, port, source_addr);
 }
 
