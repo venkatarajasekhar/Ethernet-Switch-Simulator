@@ -132,7 +132,7 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
  */
 void forward_frame(switch_state *state, unsigned int port, unsigned int source_addr,
                    unsigned int dest_addr, unsigned int frame_id) {
-	state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	//state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
 	//update_output_ports(state, port, dest_addr, frame_id);
 	//state->p1.table = switch_table_remove(state->p1.table, port, source_addr);
 }
