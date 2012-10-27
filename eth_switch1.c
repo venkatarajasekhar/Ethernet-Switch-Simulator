@@ -16,23 +16,41 @@ switch_table switch_table_create(void) {
 }
 
 
+// Remove the node that has port and addr given
 switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr) {
-	switch_table temp = head;
-	if(head==NULL) return head;
-	if(head->port==port) {
-		head = head->next;
-		temp = head;
-	}
-	switch_table pre = head;
-	head = head->next;
-	while (head!=NULL) {
-		if(head->port==port) {
-			pre->next=head->next;
+    // If it is an empty list
+    if(head == NULL) return head;
+    // temp is the real head
+    switch_table realHead = head; 
+    switch_table preNode = NULL;
+    
+    while(head != NULL){
+	if(head->addr == addr && head->port == port){
+	    // Remove the node
+	    if(preNode == NULL){
+		// If this is the first element(real head)
+		if(head->next == NULL){
+		    // If there is only one head in the list
+		    head = NULL;
+		    return head;
+		}else{
+		    head = head->next;
+		    return head;
 		}
-		pre = pre->next;
-		head = head->next;
+	    }else{
+		if(head->next != NULL){
+		    preNode->next = head->next;
+		}else{
+		    // If it is the last element in the list
+		    preNode->next = NULL;
+		}
+		return realHead;
+	    }
 	}
-	return temp;
+	preNode = head; // Save for previous node
+	head = head->next;
+    }
+    return realHead;
 }
 
 
@@ -122,9 +140,10 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
  */
 void forward_frame(switch_state *state, unsigned int port, unsigned int source_addr,
                    unsigned int dest_addr, unsigned int frame_id) {
-	state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
-	//update_switch_table(state, port, source_addr);
-	//update_output_ports(state, port, dest_addr, frame_id);
+	//state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	//update_output_ports(state, port, source_addr);
+	update_switch_table(state, port, source_addr);
+	//state->p1.table = switch_table_remove(state->p1.table, port, source_addr);
 }
 
 /* This function is called every time a timer tick is processed. Each
@@ -139,8 +158,6 @@ void process_tick(switch_state *state) {
 /* Prints the current state of the switch.
  */
 void print_switch_state(switch_state *state) {
-	
-	
 	print_ports_status_title();
 	print_forwarding_status(state->p1.status);
 	printf("\n");
