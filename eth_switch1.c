@@ -15,17 +15,42 @@ switch_table switch_table_create(void) {
 	 return new;
 }
 
-switch_table switch_table_insert(switch_table head) {
+
+switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr) {
+	switch_table temp = head;
+	if(head==NULL) return head;
+	if(head->port==port) {
+		head = head->next;
+		temp = head;
+	}
+	switch_table pre = head;
+	head = head->next;
+	while (head!=NULL) {
+		if(head->port==port) {
+			pre->next=head->next;
+		}
+		pre = pre->next;
+		head = head->next;
+	}
+	return temp;
+}
+
+
+switch_table switch_table_insert(switch_table head, unsigned int port, unsigned int addr) {
 	switch_table new = switch_table_create();
+	switch_table temp = head;
+	new->port = port;
+	new->addr = addr;
+	new->next = NULL;
 	if(head==NULL) {
 		head = new;
-		return new;
+		return head;
 	}
 	while (head->next!=NULL) {
 		head = head->next;
 	}
 	head->next = new;
-	return new;
+	return temp;
 }
 
 forwarding_status forwarding_status_create(void) {
@@ -63,88 +88,11 @@ void initialize_switch(switch_state *state) {
 }
 
 void update_output_ports(switch_state *state, unsigned int port, unsigned int dest_addr, unsigned int frame_id) {
-	switch_table table = state->p1.table; 
-	unsigned int port_num = NUM_PORTS;
-	if (table==NULL) return;
-	while (table->next!=NULL) {
-		if(table->addr==dest_addr) port_num=table->port;
-		table = table->next;
-	}
-	if(table->addr==dest_addr) port_num=table->port;
-	
-	forwarding_status new = forwarding_status_create();
-	new->frame_id = frame_id;
-	new->next = NULL;
-	if(port==port_num) {
-		for(int i=0; i<NUM_PORTS; i++) {
-			new->port_decs[i] = 0;
-		}
-	}
-	else if (port_num==NUM_PORTS) {
-		for(int i=0; i<NUM_PORTS; i++) {
-			if(i==port) new->port_decs[i] = 0;
-			else {
-				new->port_decs[i] = 1;
-				int * buffers = state->p1.port_status;
-				*(buffers+i) = *(buffers+i)+1;
-			}
-		}
-	}
-	else {
-		for(int i=0; i<NUM_PORTS; i++) {
-			if(i==port_num) {
-				new->port_decs[i] = 1;
-				int * buffers = state->p1.port_status;
-				*(buffers+i) = *(buffers+i)+1;
-			}
-			else new->port_decs[i] = 0;
-		}
-	}
-		
-	forwarding_status status = state->p1.status;
-	forwarding_status temp = status;
-	if(status==NULL) {
-		state->p1.status = new;
-		return;
-	}
-	while(status->next!=NULL) {
-		status = status->next;
-	}
-	status->next = new;
-	state->p1.status = temp;
-	
-	
-	
 	
 }
 
 void update_switch_table(switch_state *state, unsigned int port, unsigned int source_addr) {
-	switch_table table = state->p1.table;
-	if (table==NULL) {
-		table = switch_table_create();
-		table->port = port;
-		table->addr = source_addr;
-		table->next = NULL;
-		state->p1.table = table;
-		return;
-	}
-	switch_table temp = table;
-	while (table->next!=NULL) {
-		switch_table pre = table;
-		table = table->next;
-		if (table->addr==source_addr) {
-			if (table->port == port) return;
-			else {
-				if(table->next==NULL) pre->next = NULL;
-				else pre->next = table->next;
-			}
-		}
-	}
-	table->next = switch_table_create();
-	table->next->port = port;
-	table->next->addr = source_addr;
-	table->next->next = NULL;
-	state->p1.table = temp;
+	
 }
 
 /* This function is called every time a new frame is received. It
@@ -153,8 +101,9 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
  */
 void forward_frame(switch_state *state, unsigned int port, unsigned int source_addr,
                    unsigned int dest_addr, unsigned int frame_id) {
-	update_switch_table(state, port, source_addr);
-	update_output_ports(state, port, dest_addr, frame_id);
+	state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	//update_switch_table(state, port, source_addr);
+	//update_output_ports(state, port, dest_addr, frame_id);
 }
 
 /* This function is called every time a timer tick is processed. Each
@@ -169,6 +118,8 @@ void process_tick(switch_state *state) {
 /* Prints the current state of the switch.
  */
 void print_switch_state(switch_state *state) {
+	state->p1.table = switch_table_remove(state->p1.table, 4, 1122);
+	
 	print_ports_status_title();
 	print_forwarding_status(state->p1.status);
 	printf("\n");

@@ -50,7 +50,7 @@ typedef union switch_state {
 
 
 switch_table switch_table_create(void);
-switch_table switch_table_insert(switch_table head);
+switch_table switch_table_insert(switch_table head, unsigned int port, unsigned int addr);
 forwarding_status forwarding_status_create(void);
 forwarding_status forwarding_status_insert(forwarding_status head);
 void destroy_switch_table(switch_table table);
@@ -63,7 +63,7 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
 //unsigned int get_output_port(switch_table table, unsigned int dest_addr);
 int * initialize_ports_status(void);
 void update_output_ports(switch_state *state, unsigned int port, unsigned int dest_addr, unsigned int frame_id);
-
+switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr);
 
 
 void initialize_switch(switch_state *state);
