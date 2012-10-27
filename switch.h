@@ -21,18 +21,19 @@ typedef struct forwarding_status {
 } *forwarding_status;
 
 typedef struct switch_state_p1 {
-  // TODO Add the members needed for part 1 here
 	switch_table table;
 	forwarding_status status;
-	//int port_status[NUM_PORTS];
 	int *port_status;
 } switch_state_p1;
 
+typedef struct buffer {
+	unsigned int frame_id;
+	struct buffer *next;
+} *buffer;
+
 typedef struct switch_state_p2 {
-  
-  // TODO Add the members needed for part 2 here
-  
-  int remove_me; // Field added so code compiles, may be removed.
+	int current_size;
+	buffer buffer;
 } switch_state_p2;
 
 typedef struct switch_state_p3 {
@@ -49,6 +50,7 @@ typedef union switch_state {
 } switch_state;
 
 
+//functions for part1
 switch_table switch_table_create(void);
 switch_table switch_table_insert(switch_table head, unsigned int port, unsigned int addr);
 forwarding_status forwarding_status_create(void);
@@ -60,12 +62,15 @@ void print_forwarding_status(forwarding_status head);
 void print_ports_status(switch_state *state);
 void print_switch_table(switch_table head);
 void update_switch_table(switch_state *state, unsigned int port, unsigned int source_addr);
-//unsigned int get_output_port(switch_table table, unsigned int dest_addr);
 int * initialize_ports_status(void);
 void update_output_ports(switch_state *state, unsigned int port, unsigned int dest_addr, unsigned int frame_id);
 switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr);
 unsigned int is_dest_addr_in_table(switch_state *state, unsigned int dest_addr);
 
+//functions for part2
+buffer buffer_create(void);
+buffer buffer_insert(buffer head, unsigned int frame_id);
+buffer buffer_tick(buffer head);
 
 
 void initialize_switch(switch_state *state);

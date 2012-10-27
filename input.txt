@@ -1,7 +1,28 @@
-P1 cdef 0123 045
-P4 aabb 1122 046
-P1 0123 1234 047
-P1 abcd 1122 048
-P3 0123 0123 049
-P3 1234 1234 033
-P1 ffff 1234 012
+P0 aaaa bbbb 000
+TICK
+TICK
+P0 aaaa bbbb 001
+P0 aaaa bbbb 002
+P0 aaaa bbbb 003
+TICK
+P0 aaaa bbbb 004
+P0 aaaa bbbb 005
+TICK
+P0 aaaa bbbb 006
+P0 aaaa bbbb 007
+P0 aaaa bbbb 008
+TICK
+P0 aaaa bbbb 009
+P0 aaaa bbbb 010
+P0 aaaa bbbb 011
+P0 aaaa bbbb 012
+TICK
+P0 aaaa bbbb 013
+TICK
+TICK
+TICK
+TICK
+TICK
+TICK
+TICK
+P0 aaaa bbbb 016

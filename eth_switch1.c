@@ -59,7 +59,6 @@ switch_table switch_table_insert(switch_table head, unsigned int port, unsigned 
     switch_table temp = head;
     new->port = port;
     new->addr = addr;
-    //new->next = NULL;
     if(head==NULL) {
 		head = new;
 		return head;

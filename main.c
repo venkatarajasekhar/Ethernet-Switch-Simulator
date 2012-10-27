@@ -41,19 +41,9 @@ int main(int argc, char *argv[]) {
     perror("Could not open file for reading");
     return 2;
   }
-	////
-	//for (int i=0; i<NUM_PORTS; i++) {
-	//	printf(" %d  ", (&state)->p1.port_status[i]);
-	//}
-	//printf("\n");
-	////
+  
   initialize_switch(&state);
-	////
-	//for (int i=0; i<NUM_PORTS; i++) {
-	//	printf(" %d  ", (&state)->p1.port_status[i]);
-	//}
-	//printf("\n");
-	////
+  
   while(fgets(line, MAXLINE, input)) {
     
     if (toupper(line[0]) == 'P') {
@@ -62,8 +52,8 @@ int main(int argc, char *argv[]) {
                  &port, &dest_addr, &source_addr, &frame_id) < 4)
         fprintf(stderr, "Invalid frame input: %s", line);
       else
-		 forward_frame(&state, port, source_addr, dest_addr, frame_id);
-	}
+        forward_frame(&state, port, source_addr, dest_addr, frame_id);
+    }
     else if (!strncasecmp(line, "TICK", 4)) {
       
       // No parameters
