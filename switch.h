@@ -52,7 +52,7 @@ typedef union switch_state {
 switch_table switch_table_create(void);
 switch_table switch_table_insert(switch_table head, unsigned int port, unsigned int addr);
 forwarding_status forwarding_status_create(void);
-forwarding_status forwarding_status_insert(forwarding_status head);
+void forwarding_status_insert(switch_state *state,unsigned int dport, unsigned int sport,unsigned int frame_id);
 void destroy_switch_table(switch_table table);
 void destroy_forwarding_status(forwarding_status status);
 void print_ports_status_title();
