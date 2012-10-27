@@ -105,6 +105,19 @@ void initialize_switch(switch_state *state) {
 	}
 }
 
+//return NUM_PORTS if dest_addr is not in switch table
+//return port number if dest_addr is in switch table
+unsigned int is_dest_addr_in_table(switch_state *state, unsigned int dest_addr) {
+	switch_table table = state->p1.table;
+	if (table==NULL) return NUM_PORTS;
+	if (table->addr==dest_addr) return table->port;
+	while (table->next!=NULL) {
+		if (table->next->addr==dest_addr) return table->next->port;
+		table = table->next;
+	}
+	return NUM_PORTS;
+}
+
 void update_output_ports(switch_state *state, unsigned int port, unsigned int dest_addr, unsigned int frame_id) {
 	
 }
@@ -136,8 +149,6 @@ void process_tick(switch_state *state) {
 /* Prints the current state of the switch.
  */
 void print_switch_state(switch_state *state) {
-	state->p1.table = switch_table_remove(state->p1.table, 1, 291);
-	
 	print_ports_status_title();
 	print_forwarding_status(state->p1.status);
 	printf("\n");
@@ -180,6 +191,7 @@ void print_switch_table(switch_table head) {
 	if(head==NULL) return;
 	while (head!=NULL) {
 		printf("%04x", head->addr);
+		//printf("%u", head->addr);
 		printf(" ");
 		printf("P%u", head->port);
 		printf("\n");

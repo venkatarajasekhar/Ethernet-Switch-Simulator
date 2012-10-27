@@ -64,6 +64,8 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
 int * initialize_ports_status(void);
 void update_output_ports(switch_state *state, unsigned int port, unsigned int dest_addr, unsigned int frame_id);
 switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr);
+unsigned int is_dest_addr_in_table(switch_state *state, unsigned int dest_addr);
+
 
 
 void initialize_switch(switch_state *state);
