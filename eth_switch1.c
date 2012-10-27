@@ -105,7 +105,15 @@ void update_output_ports(switch_state *state, unsigned int port, unsigned int de
 }
 
 void update_switch_table(switch_state *state, unsigned int port, unsigned int source_addr) {
-	
+	unsigned int port_num_in_table = is_dest_addr_in_table(state, source_addr);
+	if(port_num_in_table==NUM_PORTS) {
+		state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	}
+	else if (port_num_in_table==port) return;
+	else {
+		state->p1.table = switch_table_remove(state->p1.table, port_num_in_table, source_addr);
+		state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
+	}
 }
 
 /* This function is called every time a new frame is received. It
@@ -131,6 +139,8 @@ void process_tick(switch_state *state) {
 /* Prints the current state of the switch.
  */
 void print_switch_state(switch_state *state) {
+	
+	
 	print_ports_status_title();
 	print_forwarding_status(state->p1.status);
 	printf("\n");
