@@ -59,15 +59,30 @@ switch_table switch_table_insert(switch_table head, unsigned int port, unsigned 
     switch_table temp = head;
     new->port = port;
     new->addr = addr;
-    new->next = NULL;
+    //new->next = NULL;
     if(head==NULL) {
-	head = new;
-	return head;
+		head = new;
+		return head;
     }
-    while (head->next!=NULL) {
-	head = head->next;
+	
+	if(new->addr < head->addr) {
+		new->next = head;
+		return new;
+	}
+	
+	switch_table pre = head;
+	switch_table nxt = head->next;
+    while (nxt!=NULL) {
+		if(new->addr>=pre->addr && new->addr<=nxt->addr) {
+			pre->next = new;
+			new->next = nxt;
+			return temp;
+		}
+		pre = pre->next;
+		nxt = nxt->next;
     }
-    head->next = new;
+	pre->next = new;
+	new->next = NULL;
     return temp;
 }
 
@@ -144,6 +159,7 @@ void initialize_switch(switch_state *state) {
 //return NUM_PORTS if dest_addr is not in switch table
 //return port number if dest_addr is in switch table
 unsigned int is_dest_addr_in_table(switch_state *state, unsigned int dest_addr) {
+	if(dest_addr==65535) return NUM_PORTS;
     switch_table table = state->p1.table;
     if (table==NULL) return NUM_PORTS;
     if (table->addr==dest_addr) return table->port;
@@ -204,6 +220,8 @@ void print_switch_state(switch_state *state) {
     printf("\n");
     print_switch_table(state->p1.table);
     printf("\n");
+	
+	
 }
 
 void print_ports_status_title() {
