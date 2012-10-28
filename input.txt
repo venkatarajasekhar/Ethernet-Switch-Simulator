@@ -1,28 +1,16 @@
-P0 aaaa bbbb 000
+P1 cdef 0123 045
+P4 aabb 1122 046
+P3 0123 cdef 047
+P0 abcd 9876 048
+P4 0123 cdef 049
 TICK
+P1 9876 abcd 050
 TICK
-P0 aaaa bbbb 001
-P0 aaaa bbbb 002
-P0 aaaa bbbb 003
+P4 1122 cdef 051
+P4 0123 cdef 052
 TICK
-P0 aaaa bbbb 004
-P0 aaaa bbbb 005
-TICK
-P0 aaaa bbbb 006
-P0 aaaa bbbb 007
-P0 aaaa bbbb 008
-TICK
-P0 aaaa bbbb 009
-P0 aaaa bbbb 010
-P0 aaaa bbbb 011
-P0 aaaa bbbb 012
-TICK
-P0 aaaa bbbb 013
-TICK
-TICK
-TICK
-TICK
-TICK
-TICK
-TICK
-P0 aaaa bbbb 016
+P3 9876 9876 053
+P4 0123 cdef 054
+P4 9876 1122 055
+P4 0123 cdef 056
+P3 0123 9876 057

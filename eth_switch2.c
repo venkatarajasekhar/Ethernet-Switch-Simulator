@@ -105,6 +105,8 @@ void print_switch_state(switch_state *state) {
   // reference fields for part 2.
 }
 
+void print_p3_titles(void){}
+
 /* Destroys all memory dynamically allocated through this state (such
  * as the switch table) and frees all resources used by the switch.
  */

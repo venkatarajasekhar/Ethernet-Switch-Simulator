@@ -37,10 +37,9 @@ typedef struct switch_state_p2 {
 } switch_state_p2;
 
 typedef struct switch_state_p3 {
-  
-  // TODO Add the members needed for part 3 here
-  
-  int remove_me; // Field added so code compiles, may be removed.
+	buffer buffers[NUM_PORTS];
+	int ports_size[NUM_PORTS];
+	switch_table table;
 } switch_state_p3;
 
 typedef union switch_state {
@@ -70,7 +69,11 @@ unsigned int is_dest_addr_in_table(switch_state *state, unsigned int dest_addr);
 //functions for part2
 buffer buffer_create(void);
 buffer buffer_insert(buffer head, unsigned int frame_id);
-buffer buffer_tick(buffer head);
+
+//functions for part3
+void destroy_buffer(buffer cbuffer);
+void print_bufferstatue(switch_state *state);
+void print_p3_titles(void);
 
 
 void initialize_switch(switch_state *state);

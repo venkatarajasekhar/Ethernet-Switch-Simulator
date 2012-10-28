@@ -192,12 +192,8 @@ void update_switch_table(switch_state *state, unsigned int port, unsigned int so
  */
 void forward_frame(switch_state *state, unsigned int port, unsigned int source_addr,
 	unsigned int dest_addr, unsigned int frame_id) {
-    //state->p1.table = switch_table_insert(state->p1.table, port, source_addr);
-    //update_output_ports(state, port, dest_addr, frame_id);
-    //update_output_ports(state, port, source_addr);
     update_switch_table(state, port, source_addr);
     update_output_ports(state, port, dest_addr, frame_id);
-    //state->p1.table = switch_table_remove(state->p1.table, port, source_addr);
 }
 
 /* This function is called every time a timer tick is processed. Each
@@ -256,13 +252,14 @@ void print_switch_table(switch_table head) {
     if(head==NULL) return;
     while (head!=NULL) {
 	printf("%04x", head->addr);
-	//printf("%u", head->addr);
 	printf(" ");
 	printf("P%u", head->port);
 	printf("\n");
 	head = head->next;
     }
 }
+
+void print_p3_titles(void){}
 
 /* Destroys all memory dynamically allocated through this state (such
  * as the switch table) and frees all resources used by the switch.

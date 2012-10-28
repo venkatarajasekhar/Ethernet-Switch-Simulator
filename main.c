@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
   
   initialize_switch(&state);
   
+  print_p3_titles();
   while(fgets(line, MAXLINE, input)) {
     
     if (toupper(line[0]) == 'P') {
