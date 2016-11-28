@@ -7,42 +7,44 @@
 #define _SWITCH_H_
 
 #include "capacity.h"
+#define sizeof(struct switch_table) SIZEOFSTRUCTSWITCHTABLE;
 
-typedef struct switch_table {
+
+typedef struct switch_table_S {
 	unsigned int port;
 	unsigned int addr;
 	struct switch_table *next;
-} *switch_table;
+}switch_table;
 
-typedef struct forwarding_status {
+typedef struct forwarding_status_S {
 	int port_decs[NUM_PORTS];
 	unsigned int frame_id;
 	struct forwarding_status *next;
-} *forwarding_status;
+}forwarding_status;
 
-typedef struct switch_state_p1 {
+typedef struct switch_state_p1_S {
 	switch_table table;
 	forwarding_status status;
 	int *port_status;
-} switch_state_p1;
+}switch_state_p1;
 
-typedef struct buffer {
+typedef struct buffer_S {
 	unsigned int frame_id;
 	struct buffer *next;
-} *buffer;
+}buffer;
 
-typedef struct switch_state_p2 {
+typedef struct switch_state_p2_S {
 	int current_size;
 	buffer buffer;
 } switch_state_p2;
 
-typedef struct switch_state_p3 {
+typedef struct switch_state_p3_S {
 	buffer buffers[NUM_PORTS];
 	int ports_size[NUM_PORTS];
 	switch_table table;
 } switch_state_p3;
 
-typedef union switch_state {
+typedef union switch_state_S {
   switch_state_p1 p1;
   switch_state_p2 p2;
   switch_state_p3 p3;
