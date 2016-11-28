@@ -9,93 +9,103 @@
 #include "switch.h"
 
 
-switch_table switch_table_create(void) {
-    switch_table new = (switch_table) malloc(sizeof(struct switch_table));
-    new->next = NULL;
-    return new;
+switch_table* switch_table_create(void) {
+	switch_table SwitchArr[SIZEOFSTRUCTSWITCHTABLE];
+        switch_table *Switch_Ptr = (switch_table) malloc(sizeof(struct switch_table));
+        if(Switch_Ptr){
+	Switch_Ptr->next = NULL;
+	}
+	else{
+	 Switch_Ptr = SwitchArr;
+	 Switch_Ptr->next = NULL;
+	}	
+    return Switch_Ptr;
 }
 
 
 // Remove the node that has port and addr given
-switch_table switch_table_remove(switch_table head, unsigned int port, unsigned int addr) {
-    // If it is an empty list
-    if(head == NULL) return head;
-    // temp is the real head
-    switch_table realHead = head; 
-    switch_table preNode = NULL;
+switch_table* switch_table_remove(switch_table *switch_head, unsigned int port, unsigned int addr) {
+    switch_table *SwitchNode = switch_head; 
+    switch_table *preNode = NULL;
 
-    while(head != NULL){
-	if(head->addr == addr && head->port == port){
-	    // Remove the node
-	    if(preNode == NULL){
-		// If this is the first element(real head)
-		if(head->next == NULL){
-		    // If there is only one head in the list
-		    head = NULL;
-		    return head;
-		}else{
-		    head = head->next;
-		    return head;
+    if(switch_head == NULL) 
+	    return SwitchNode;
+    while(switch_head != NULL){
+	    preNode = switch_head;
+	if((switch_head->addr == addr) && (switch_head->port == port)){
+		//if List had one element
+	  if(switch_head->next == NULL){
+		    // If there is only one node in the list
+		    switch_head = NULL;
+		    return SwitchNode;
 		}
-	    }else{
-		if(head->next != NULL){
-		    preNode->next = head->next;
+		 //If there is more than one node 
+		else{
+		    preNode = switch_head;
+		    switch_head = switch_head->next;
+		    return SwitchNode;
+		}
+	    } 
+	    //Else part of the Logic, Not able to find the elemnent from the List  
+		else{
+		if(switch_head->next != NULL){
+		    preNode->next = switch_head->next;			
 		}else{
 		    // If it is the last element in the list
 		    preNode->next = NULL;
 		}
-		return realHead;
+		return SwitchNode;
 	    }
-	}
-	preNode = head; // Save for previous node
-	head = head->next;
-    }
-    return realHead;
+	}// Closed While
+	preNode = switch_head; // Save for previous node
+	switch_head = switch_head->next;
+        return preNode;
 }
 
 
-switch_table switch_table_insert(switch_table head, unsigned int port, unsigned int addr) {
-    switch_table new = switch_table_create();
-    switch_table temp = head;
-    new->port = port;
-    new->addr = addr;
-    if(head==NULL) {
-		head = new;
+switch_table switch_table_insert(switch_table *swhead, unsigned int port, unsigned int addr) {
+    switch_table *SwitchTCreate = switch_table_create();
+    switch_table temp = swhead;
+    SwitchTCreate->port = port;
+    SwitchTCreate->addr = addr;
+    if(swhead==NULL) {
+		swhead = SwitchTCreate;
 		return head;
     }
 	
-	if(new->addr < head->addr) {
-		new->next = head;
-		return new;
+	if(SwitchTCreate->addr < swhead->addr) {
+		SwitchTCreate->next = swhead;
+		return SwitchTCreate;
 	}
 	
-	switch_table pre = head;
-	switch_table nxt = head->next;
+	switch_table pre = swhead;
+	switch_table nxt = swhead->next;
     while (nxt!=NULL) {
-		if(new->addr>=pre->addr && new->addr<=nxt->addr) {
-			pre->next = new;
-			new->next = nxt;
+		if(new->addr>=pre->addr && SwitchTCreate->addr<=nxt->addr) {
+			pre->next = SwitchTCreate;
+			SwitchTCreate->next = nxt;
 			return temp;
 		}
 		pre = pre->next;
 		nxt = nxt->next;
     }
-	pre->next = new;
-	new->next = NULL;
+	pre->next = SwitchTCreate;
+	SwitchTCreate->next = NULL;
     return temp;
 }
 
 forwarding_status forwarding_status_create(void) {
-    forwarding_status new = (forwarding_status) malloc(sizeof(struct forwarding_status));
-    new->next = NULL;
-    return new;
+    forwarding_status *Fsnew = (forwarding_status) malloc(sizeof(struct forwarding_status));
+	if(Fsnew)
+    Fsnew->next = NULL;
+    return Fsnew;
 }
 
 void forwarding_status_insert(switch_state *state, unsigned int dport, unsigned int sport, unsigned int frame_id) {
-    forwarding_status head = state->p1.status;
-    forwarding_status new = forwarding_status_create();
-    new->frame_id = frame_id;
-    new->next = NULL;
+    forwarding_status *head = state->p1.status;
+    forwarding_status *fstanew = forwarding_status_create();
+    fstanew->frame_id = frame_id;
+    fstanew->next = NULL;
     // We found a des port to send
     if(dport >= 0 && dport < NUM_PORTS){
 	if(dport == sport){
